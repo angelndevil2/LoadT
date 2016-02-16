@@ -2,7 +2,6 @@ package com.github.angelndevil2.loadt.loadmanager;
 
 import com.github.angelndevil2.loadt.common.*;
 import com.github.angelndevil2.loadt.listener.IResultListener;
-import lombok.NonNull;
 
 /**
  * name is the key, so constructor with name is necessary.
@@ -119,7 +118,7 @@ public interface ILoadManager extends Runnable {
      * @param calculator calculator
      * @throws LoadTException
      */
-    void addCalculator(@NonNull IResultCalculator calculator) throws LoadTException;
+    void addCalculator(IResultCalculator calculator) throws LoadTException;
 
     /**
      * add listener to calculator with name which need {@link StatisticSample statistic sample}
@@ -128,5 +127,5 @@ public interface ILoadManager extends Runnable {
      * @param listener ResultListener to be added
      * @throws LoadTException
      */
-    void addStatisticSampleListener(@NonNull String calculatorName, @NonNull IResultListener listener) throws LoadTException;
+    void addStatisticSampleListener(String calculatorName, IResultListener listener) throws LoadTException;
 }

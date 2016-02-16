@@ -42,7 +42,7 @@ public class LoadTTest {
         loadT.setNumberOfThread(name, 1);
 
         // add http sampler
-         loadT.addHttpSampler(name, "websphere", "192.168.100.241", 10370, "/ext", HTTPMethod.GET, "192.168.100.241");
+        loadT.addHttpSampler(name, "websphere", "192.168.100.241", 10370, "/ext", HTTPMethod.GET, "192.168.100.241");
 
         // add system information collector with domain "192.168.100.241"
         //SystemInfoCollector systemInfoCollector = new SystemInfoCollector("192.168.100.241");
@@ -57,13 +57,5 @@ public class LoadTTest {
 
         // run test
         loadT.runTestAll();
-/*
-        while (true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                break;
-            }
-        }*/
     }
 }
