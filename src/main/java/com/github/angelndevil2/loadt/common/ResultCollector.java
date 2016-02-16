@@ -87,20 +87,6 @@ public class ResultCollector implements IResultCollector {
     }
 
     /**
-     * add listener to calculator with name which need {@link StatisticSample statistic sample}
-     *
-     * @param calculatorName calculator name
-     * @param listener       ResultListener to be added
-     */
-    @Override
-    public void addStatisticSampleListener(@NonNull String calculatorName, @NonNull IResultListener listener) throws LoadTException {
-        IResultCalculator calculator = calculators.get(calculatorName);
-        if (calculator == null) throw new LoadTException("calculator "+calculatorName+" is not exist.");
-
-        calculator.addListener(listener);
-    }
-
-    /**
      * send sampling result to calculators.
      *
      * @param sample

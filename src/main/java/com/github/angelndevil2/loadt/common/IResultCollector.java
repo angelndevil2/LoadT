@@ -48,15 +48,6 @@ public interface IResultCollector extends Serializable {
     void addCalculator(IResultCalculator calculator) throws LoadTException;
 
     /**
-     * add listener to calculator with name which need {@link StatisticSample statistic sample}
-     *
-     * @param calculatorName calculator name
-     * @param listener ResultListener to be added
-     * @throws LoadTException
-     */
-    void addStatisticSampleListener(String calculatorName, IResultListener listener) throws LoadTException;
-
-    /**
      * send sampling result to calculators.
      *
      * @param sample
