@@ -1,12 +1,10 @@
 package com.github.angelndevil2.loadt.loadmanager;
 
-import com.github.angelndevil2.loadt.common.HTTPMethod;
-import com.github.angelndevil2.loadt.common.HttpSampler;
-import com.github.angelndevil2.loadt.common.LoadTException;
-import com.github.angelndevil2.loadt.common.SystemInfoCollector;
+import com.github.angelndevil2.loadt.common.*;
 import com.github.angelndevil2.loadt.listener.IResultListener;
 import com.github.angelndevil2.loadt.util.ContextUtil;
 import lombok.Data;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -115,6 +113,25 @@ public abstract class LoadManager implements ILoadManager {
      */
     public void addSystemInfoCollector(SystemInfoCollector collector) throws LoadTException {
         getContext().addSystemInfoCollector(collector);
+    }
+
+    /**
+     * add {@link IResultCalculator calculator} for statistic data
+     *
+     * @param calculator calculator
+     */
+    public void addCalculator(@NonNull IResultCalculator calculator) throws LoadTException {
+        getContext().addCalculator(calculator);
+    }
+
+    /**
+     * add listener to calculator with name which need {@link StatisticSample statistic sample}
+     *
+     * @param calculatorName calculator name
+     * @param listener       ResultListener to be added
+     */
+    public void addStatisticSampleListener(@NonNull String calculatorName, @NonNull IResultListener listener) throws LoadTException {
+        getContext().addStatisticSampleListener(calculatorName, listener);
     }
 
     /**

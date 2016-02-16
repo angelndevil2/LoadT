@@ -1,14 +1,8 @@
 package com.github.angelndevil2.loadt;
 
-import com.github.angelndevil2.loadt.common.HTTPMethod;
-import com.github.angelndevil2.loadt.common.HttpSampler;
-import com.github.angelndevil2.loadt.common.LoadTException;
-import com.github.angelndevil2.loadt.common.SystemInfoCollector;
+import com.github.angelndevil2.loadt.common.*;
 import com.github.angelndevil2.loadt.listener.IResultListener;
-import com.github.angelndevil2.loadt.loadmanager.ILoadManager;
-import com.github.angelndevil2.loadt.loadmanager.JMeterLoadManager;
-import com.github.angelndevil2.loadt.loadmanager.LoadManagerType;
-import com.github.angelndevil2.loadt.loadmanager.TestLoadManager;
+import com.github.angelndevil2.loadt.loadmanager.*;
 import com.github.angelndevil2.loadt.util.ContextUtil;
 import lombok.Data;
 import lombok.Getter;
@@ -194,8 +188,35 @@ public class LoadT {
      * @throws LoadTException
      */
     public void addSystemInfoCollector(String managerName, SystemInfoCollector collector) throws LoadTException {
-        if (!loadManagers.containsKey(managerName)) throw new LoadTException("LoadManager " + managerName + " is not exist.");
-        loadManagers.get(managerName).addSystemInfoCollector(collector);
+        ILoadManager manager = loadManagers.get(managerName);
+        if (manager == null) throw new LoadTException("LoadManager " + managerName + " is not exist.");
+        manager.addSystemInfoCollector(collector);
+    }
+
+    /**
+     * add {@link IResultCalculator calculator} for statistic data
+     *
+     * @param managerName
+     * @param calculator calculator
+     * @throws LoadTException
+     */
+    public void addCalculator(@NonNull String managerName, @NonNull IResultCalculator calculator) throws LoadTException {
+        ILoadManager manager = loadManagers.get(managerName);
+        if (manager == null) throw new LoadTException("LoadManager " + managerName + " is not exist.");
+        manager.addCalculator(calculator);
+    }
+
+    /**
+     * add listener to calculator with name which need {@link StatisticSample statistic sample}
+     *
+     * @param managerName
+     * @param calculatorName calculator name
+     * @param listener       ResultListener to be added
+     */
+    public void addStatisticSampleListener(@NonNull String managerName, @NonNull String calculatorName, @NonNull IResultListener listener) throws LoadTException {
+        ILoadManager manager = loadManagers.get(managerName);
+        if (manager == null) throw new LoadTException("LoadManager " + managerName + " is not exist.");
+        manager.addStatisticSampleListener(calculatorName, listener);
     }
 
     /**

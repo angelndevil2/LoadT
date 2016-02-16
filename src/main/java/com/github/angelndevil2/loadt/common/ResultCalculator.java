@@ -1,62 +1,32 @@
 package com.github.angelndevil2.loadt.common;
 
 import com.github.angelndevil2.loadt.listener.IResultListener;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.jmeter.samplers.SampleResult;
-import org.apache.jmeter.util.Calculator;
 
 import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
- * @author k, Created on 16. 2. 16.
+ * @author k, Created on 16. 2. 17.
  */
 @Data
 @Slf4j
-@EqualsAndHashCode(callSuper = true)
-public class JMeterCalculator extends Calculator implements IResultCalculator{
+public abstract class ResultCalculator implements IResultCalculator {
 
-    private static final long serialVersionUID = -1653420503046132283L;
+    private static final long serialVersionUID = -8973924537201333735L;
 
+    private ISample sample;
+    private String name;
     private Thread thread;
 
     @Getter(AccessLevel.NONE)
     private final transient HashMap<IResultListener, Void> listeners = new HashMap<IResultListener, Void>();
     @Getter(AccessLevel.NONE)
     private transient final ArrayBlockingQueue<ISample> q = new ArrayBlockingQueue<ISample>(100000);
-
-    public JMeterCalculator(String label) {
-        super(label);
-    }
-
-    /**
-     * @return calculator name
-     */
-    @Override
-    public String getName() {
-        return getLabel();
-    }
-
-    public StatisticSample calcSample(@NonNull ISample sample) {
-        SampleResult result = (SampleResult)sample;
-        addSample(result);
-        StatisticSample statisticSample = new StatisticSample();
-        statisticSample.setName(getLabel());
-        statisticSample.setRate(getRate());
-        statisticSample.setAvgRate(getMean());
-        statisticSample.setDeviation(getStandardDeviation());
-        statisticSample.setErrorPercentage(getErrorPercentage());
-        statisticSample.setBytesPerSec(getBytesPerSecond());
-        statisticSample.setAvgPageBytes(getAvgPageBytes());
-        statisticSample.setCpuBusyPercentage(sample.getCpuBusy());
-        statisticSample.setCount(getCount());
-        statisticSample.setMax(getMax());
-        statisticSample.setMin(getMin());
-        statisticSample.setTotalThread(result.getAllThreads());
-        statisticSample.setTimestamp(result.getTimeStamp());
-        return statisticSample;
-    }
 
     /**
      * called when sample is occurred.
@@ -65,7 +35,6 @@ public class JMeterCalculator extends Calculator implements IResultCalculator{
      */
     @Override
     public void sampleOccurred(@NonNull ISample sample) {
-        log.debug("sample {} occurred", sample);
         q.offer(sample);
     }
 
@@ -79,7 +48,6 @@ public class JMeterCalculator extends Calculator implements IResultCalculator{
     public void addListener(@NonNull IResultListener listener) throws LoadTException {
         if (listeners.containsKey(listener)) throw new LoadTException("listener "+listener+" already exist.");
         listeners.put(listener, null);
-        log.debug("{} added", listener);
     }
 
     /**
@@ -91,7 +59,6 @@ public class JMeterCalculator extends Calculator implements IResultCalculator{
     public void sendToListeners(@NonNull StatisticSample sample) {
         for (IResultListener listener : listeners.keySet()) {
             listener.sampleOccurred(sample);
-            log.debug("{} send to {}", sample, listener);
         }
     }
 
