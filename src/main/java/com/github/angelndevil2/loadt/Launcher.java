@@ -1,5 +1,6 @@
 package com.github.angelndevil2.loadt;
 
+import com.github.angelndevil2.loadt.common.LoadTException;
 import com.github.angelndevil2.loadt.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
@@ -17,7 +18,7 @@ import static java.lang.System.exit;
 @Slf4j
 public class Launcher {
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) throws ParseException, IOException, LoadTException, InterruptedException {
 
         CmdOptions options = new CmdOptions();
 

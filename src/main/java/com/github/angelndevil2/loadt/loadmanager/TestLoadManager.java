@@ -1,17 +1,26 @@
 package com.github.angelndevil2.loadt.loadmanager;
 
-import com.github.angelndevil2.loadt.common.LoadManagerType;
+import com.github.angelndevil2.loadt.common.LoadTException;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Dummy LoadManager for module testing.
  *
  * @author k, Created on 16. 2. 5.
  */
-public class TestLoadManager implements ILoadManager {
+@Data
+@Slf4j
+@EqualsAndHashCode(callSuper=true)
+public class TestLoadManager extends LoadManager {
+
+    public TestLoadManager(String name) throws LoadTException {
+        super(name);
+    }
     /**
      * @return LoadManagerType
      */
-    @Override
     public LoadManagerType getType() {
         return LoadManagerType.DUMMY;
     }
@@ -20,15 +29,20 @@ public class TestLoadManager implements ILoadManager {
      * prepare test
      */
     @Override
-    public void prepareTest() {
-
+    public void prepareTest() throws LoadTException {
+        // for error check, call super
+        super.prepareTest();
+        System.out.println("prepared test.");
     }
 
     /**
      * run test actually
      */
-    @Override
     public void performTest() {
+        System.out.println("start test.");
+    }
 
+    public boolean isActive() {
+        return false;
     }
 }

@@ -1,4 +1,4 @@
-package com.github.angelndevil2.loadt.common;
+package com.github.angelndevil2.loadt.loadmanager;
 
 /**
  * @author k, Created on 16. 2. 5.
