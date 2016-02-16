@@ -2,7 +2,6 @@ package com.github.angelndevil2.loadt.loadmanager;
 
 import com.github.angelndevil2.loadt.common.*;
 import com.github.angelndevil2.loadt.listener.IResultListener;
-import com.github.angelndevil2.loadt.listener.StatisticViewer;
 import com.github.angelndevil2.loadt.util.PropertiesUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -122,17 +121,23 @@ public class JMeterLoadManager extends LoadManager {
         for (IResultListener listener : getContext().getListeners()) {
             try {
 
-                final ResultType type = listener.getResultType();
                 resultCollector.addListener(listener);
-
-                if (type.equals(ResultType.STATISTIC)) {
-                    StatisticViewer viewer = (StatisticViewer)listener;
-                    viewer.setTotalCalculator(new JMeterCalculator("TOTAL"));
-                    viewer.start();
-                }
-
                 log.debug("listener {} appended.", listener.toString());
 
+            } catch (LoadTException e) {
+                log.warn(e.getMessage(), e);
+            }
+        }
+
+        initCalculator();
+    }
+
+    private void initCalculator() {
+        for (IResultCalculator calculator : getContext().getCalculators().values()) {
+            try {
+                resultCollector.addCalculator(calculator);
+                calculator.start();
+                log.debug("{} started", calculator);
             } catch (LoadTException e) {
                 log.warn(e.getMessage(), e);
             }

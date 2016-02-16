@@ -2,21 +2,20 @@ package com.github.angelndevil2.loadt.common;
 
 import com.github.angelndevil2.loadt.listener.IResultListener;
 import com.github.angelndevil2.loadt.util.ContextUtil;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.jmeter.samplers.SampleEvent;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NonNull;
 
 import java.util.WeakHashMap;
 
 /**
- * @author k, Created on 16. 2. 15.
+ * @author k, Created on 16. 2. 17.
  */
 @Data
-@Slf4j
-@EqualsAndHashCode(callSuper = true)
-public class JMeterResultCollector extends org.apache.jmeter.reporters.ResultCollector implements IResultCollector {
+public class ResultCollector implements IResultCollector {
 
-    private static final long serialVersionUID = 7605139400548030368L;
+    private static final long serialVersionUID = -2779880260423052037L;
 
     @Getter(AccessLevel.NONE)
     private final transient WeakHashMap<IResultListener, Void> listeners = new WeakHashMap<IResultListener, Void>();
@@ -26,36 +25,23 @@ public class JMeterResultCollector extends org.apache.jmeter.reporters.ResultCol
     /**
      * called when sample is occurred.
      *
-     * @param event
+     * @param sample
      */
     @Override
-    public void sampleOccurred(@NonNull SampleEvent event) {
-        sampleOccurred(new JMeterSampleResult(event.getResult()));
-    }
-
-    /**
-     * called when sample is occurred.
-     *
-     * @param result
-     */
-    public void sampleOccurred(@NonNull ISample result) {
-
-        JMeterSampleResult jMeterSampleResult = (JMeterSampleResult)result;
-        if (isSampleWanted(jMeterSampleResult.isSuccessful())) {
-            jMeterSampleResult.setCpuBusy(getCpuBusy(result));
-            sendToListeners(result);
-            sendToCalculators(result);
-        }
+    public void sampleOccurred(@NonNull ISample sample) {
+        sendToCalculators(sample);
+        sendToListeners(sample);
     }
 
     /**
      * send sampling result to listener
      *
-     * @param result
+     * @param sample
      */
-    public void sendToListeners(@NonNull ISample result) {
+    @Override
+    public void sendToListeners(@NonNull ISample sample) {
         for (IResultListener listener : listeners.keySet()) {
-            listener.sampleOccurred(result);
+            listener.sampleOccurred(sample);
         }
     }
 
@@ -65,6 +51,7 @@ public class JMeterResultCollector extends org.apache.jmeter.reporters.ResultCol
      * @param listener ResultListener to be added
      * @throws LoadTException
      */
+    @Override
     public void addListener(@NonNull IResultListener listener) throws LoadTException {
         if (listeners.containsKey(listener)) throw new LoadTException("listener "+listener+" already exist.");
         listeners.put(listener, null);
@@ -76,6 +63,7 @@ public class JMeterResultCollector extends org.apache.jmeter.reporters.ResultCol
      * @param sample
      * @return cpu busy percentage. null if system information collector is not available.
      */
+    @Override
     public Double getCpuBusy(@NonNull ISample sample) {
         String index = sample.getLabel();
         HttpSampler sampler = ContextUtil.getLoadManagerContext().getHttpSampler(index);
@@ -90,8 +78,8 @@ public class JMeterResultCollector extends org.apache.jmeter.reporters.ResultCol
      * add {@link IResultCalculator calculator} for statistic data
      *
      * @param calculator calculator
+     * @throws LoadTException
      */
-    @Override
     public void addCalculator(@NonNull IResultCalculator calculator) throws LoadTException {
         String name = calculator.getName();
         if (calculators.containsKey(name)) throw new LoadTException("calculator "+name+" already exist.");
@@ -120,7 +108,6 @@ public class JMeterResultCollector extends org.apache.jmeter.reporters.ResultCol
     @Override
     public void sendToCalculators(ISample sample) {
         for (IResultCalculator calculator : calculators.values()) {
-            log.debug("sample {} sent to calculator {}", sample, calculator);
             calculator.sampleOccurred(sample);
         }
     }

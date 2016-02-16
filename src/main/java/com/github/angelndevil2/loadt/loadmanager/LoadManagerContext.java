@@ -28,6 +28,7 @@ public class LoadManagerContext extends ContextBase {
     private transient final ConcurrentHashMap<String, HttpSampler> httpSamplers = new ConcurrentHashMap<String, HttpSampler>();
     private transient final CopyOnWriteArrayList<IResultListener> listeners = new CopyOnWriteArrayList<IResultListener>();
     private transient final ConcurrentHashMap<String, SystemInfoCollector> systemInfoCollectors = new ConcurrentHashMap<String, SystemInfoCollector>();
+    private transient final ConcurrentHashMap<String, IResultCalculator> calculators = new ConcurrentHashMap<String, IResultCalculator>();
 
     /**
      * set {@link HTTPOptions#keepAlive}
@@ -160,5 +161,29 @@ public class LoadManagerContext extends ContextBase {
      */
     public SystemInfoCollector getSystemInfoCollector(String systemInfoCollectorDomain) {
         return systemInfoCollectors.get(systemInfoCollectorDomain);
+    }
+
+    /**
+     * add {@link IResultCalculator calculator} for statistic data
+     *
+     * @param calculator calculator
+     */
+    public void addCalculator(@NonNull IResultCalculator calculator) throws LoadTException {
+        String name = calculator.getName();
+        if (calculators.containsKey(name)) throw new LoadTException("calculator "+name+" already exist.");
+        calculators.put(name, calculator);
+    }
+
+    /**
+     * add listener to calculator with name which need {@link StatisticSample statistic sample}
+     *
+     * @param calculatorName calculator name
+     * @param listener       ResultListener to be added
+     */
+    public void addStatisticSampleListener(@NonNull String calculatorName, @NonNull IResultListener listener) throws LoadTException {
+        IResultCalculator calculator = calculators.get(calculatorName);
+        if (calculator == null) throw new LoadTException("calculator "+calculatorName+" is not exist.");
+
+        calculator.addListener(listener);
     }
 }
