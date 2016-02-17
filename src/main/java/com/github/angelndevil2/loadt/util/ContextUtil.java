@@ -52,6 +52,14 @@ public class ContextUtil implements Serializable {
 
     /**
      *
+     * @return interval in millis
+     */
+    public static long getViewInterval() {
+        return globalContext.getViewInterval();
+    }
+
+    /**
+     *
      * @param domainName rmi domain name which used by SystemInfoCollector
      * @return SystemInfoCollector
      */

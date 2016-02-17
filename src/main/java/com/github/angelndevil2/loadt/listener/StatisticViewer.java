@@ -26,6 +26,6 @@ public abstract class StatisticViewer extends ResultViewer {
     @Override
     public void sampleOccurred(@NonNull ISample sample) {
         statistics = (StatisticSample) sample;
-        view();
+        viewOrNot(sample);
     }
 }

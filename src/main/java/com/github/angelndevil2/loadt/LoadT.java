@@ -89,6 +89,22 @@ public class LoadT {
     }
 
     /**
+     * set view interval in millis
+     * @param interval in millis
+     */
+    public void setViewInterval(long interval) {
+        context.setViewInterval(interval);
+    }
+
+    /**
+     *
+     * @return interval in millis
+     */
+    public long getViewInterval() {
+        return context.getViewInterval();
+    }
+
+    /**
      *
      * after check if key(LoadManager's name) is exist, set loop count.<br />
      * if key is already exist, throw {@link LoadTException}

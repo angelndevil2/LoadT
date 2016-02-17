@@ -54,6 +54,7 @@ public class LoadTTest {
 
         // add console viewer
         //loadT.addListener(name, new ConsoleResultViewer());
+        loadT.setViewInterval(1000);
         loadT.addCalculator(name, new JMeterCalculator("TOTAL"));
         loadT.addStatisticSampleListener(name, "TOTAL", new ConsoleStatisticViewer());
 

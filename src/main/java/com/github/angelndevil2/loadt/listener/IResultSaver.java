@@ -43,5 +43,5 @@ public interface IResultSaver extends IResultListener,  Runnable, Serializable {
      * check {@link com.github.angelndevil2.loadt.common.SaveOptions} and save or not
      *
      */
-    void saveOrNot(ISample sample) throws LoadTException;
+    void saveOrNot(final ISample sample) throws LoadTException;
 }

@@ -64,7 +64,7 @@ public abstract class ResultSaver implements IResultSaver {
      *
      */
     @Override
-    public void saveOrNot(ISample sample) throws LoadTException {
+    public void saveOrNot(@NonNull final ISample sample) throws LoadTException {
         final long currentTime = System.currentTimeMillis();
         if (currentTime - lastSaveTime > getSaveInterval()) {
             save(sample);

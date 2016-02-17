@@ -1,9 +1,6 @@
 package com.github.angelndevil2.loadt;
 
-import com.github.angelndevil2.loadt.common.ContextBase;
-import com.github.angelndevil2.loadt.common.LoadTException;
-import com.github.angelndevil2.loadt.common.SaveOptions;
-import com.github.angelndevil2.loadt.common.SystemInfoCollector;
+import com.github.angelndevil2.loadt.common.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -22,6 +19,7 @@ public class LoadTContext extends ContextBase {
     private static final long serialVersionUID = -3020232893612521700L;
 
     private final SaveOptions saveOptions = new SaveOptions();
+    private final ViewOptions viewOptions = new ViewOptions();
     private transient final ConcurrentHashMap<String, SystemInfoCollector> systemInfoCollectors = new ConcurrentHashMap<String, SystemInfoCollector>();
 
     /**
@@ -71,6 +69,22 @@ public class LoadTContext extends ContextBase {
      */
     public long getSaveInterval() {
         return saveOptions.getSaveInterval();
+    }
+
+    /**
+     * set view interval in millis
+     * @param interval in millis
+     */
+    public void setViewInterval(final long interval) {
+        viewOptions.setViewInterval(interval);
+    }
+
+    /**
+     *
+     * @return interval in millis
+     */
+    public long getViewInterval() {
+        return viewOptions.getViewInterval();
     }
 
     /**
