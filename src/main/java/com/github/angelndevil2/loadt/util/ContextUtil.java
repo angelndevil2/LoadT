@@ -26,19 +26,36 @@ public class ContextUtil implements Serializable {
     @Setter
     private static LoadT loadT;
 
-    public static void setLoadManagerContext(final LoadManagerContext ctx) {
+    /**
+     *
+     * @param ctx load manager context to be set to thread local
+     */
+    public static void setLoadManagerContext(@NonNull final LoadManagerContext ctx) {
         context.set(ctx);
     }
 
+    /**
+     *
+     * @return load manager context in thread local
+     */
     public static LoadManagerContext getLoadManagerContext() {
         return context.get();
     }
 
+    /**
+     *
+     * @return save interval in millis
+     */
     public static long getSaveInterval() {
         return globalContext.getSaveInterval();
     }
 
-    public static SystemInfoCollector getSystemInfoCollector(@NonNull String domainName) {
+    /**
+     *
+     * @param domainName rmi domain name which used by SystemInfoCollector
+     * @return SystemInfoCollector
+     */
+    public static SystemInfoCollector getSystemInfoCollector(@NonNull final String domainName) {
         return globalContext.getSystemInfoCollector(domainName);
     }
 }

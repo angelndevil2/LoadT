@@ -51,9 +51,9 @@ public class LoadTContext extends ContextBase {
      *
      * @throws LoadTException if SystemInfoCollector with name(domain name) is not exist.
      */
-    public void startSystemInfoCollector(String name) throws LoadTException {
+    public void startSystemInfoCollector(@NonNull final String name) throws LoadTException {
         SystemInfoCollector sic = systemInfoCollectors.get(name);
-        if (name == null) throw new LoadTException("System information collector ("+name+") is not exist.");
+        if (sic == null) throw new LoadTException("System information collector ("+name+") is not exist.");
          sic.start();
     }
 
@@ -61,7 +61,7 @@ public class LoadTContext extends ContextBase {
      * set save interval in millis
      * @param interval in millis
      */
-    public void setSaveInterval(long interval) {
+    public void setSaveInterval(final long interval) {
         saveOptions.setSaveInterval(interval);
     }
 
