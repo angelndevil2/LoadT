@@ -28,7 +28,7 @@ public class StatisticSample implements ISample, Comparable<StatisticSample>{
     private Double cpuBusyPercentage;
     private long totalThread;
 
-    public String toCVSString() {
+    public String toCSVString() {
         Formatter f = new Formatter();
         if (cpuBusyPercentage == null) {
             return f.format(FORMAT,
@@ -72,7 +72,7 @@ public class StatisticSample implements ISample, Comparable<StatisticSample>{
      * @return sample to printable string
      */
     public String toPrintableString() {
-        return toCVSString();
+        return toCSVString();
     }
 
     /**

@@ -129,15 +129,10 @@ public class JMeterLoadManager extends LoadManager {
             }
         }
 
-        initCalculator();
-    }
-
-    private void initCalculator() {
         for (IResultCalculator calculator : getContext().getCalculators().values()) {
             try {
                 resultCollector.addCalculator(calculator);
-                calculator.start();
-                log.debug("{} started", calculator);
+                log.debug("calculator {} appended", calculator);
             } catch (LoadTException e) {
                 log.warn(e.getMessage(), e);
             }

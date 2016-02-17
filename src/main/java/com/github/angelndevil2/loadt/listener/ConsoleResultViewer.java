@@ -22,7 +22,7 @@ public class ConsoleResultViewer extends ResultViewer {
     @Override
     public void sampleOccurred(@NonNull ISample result) {
         super.sampleOccurred(result);
-        view();
+        viewOrNot(result);
     }
 
     public void view() {

@@ -2,7 +2,7 @@ package com.github.angelndevil2.loadt.loadmanager;
 
 import com.github.angelndevil2.loadt.common.*;
 import com.github.angelndevil2.loadt.listener.IResultListener;
-import lombok.NonNull;
+import com.github.angelndevil2.loadt.listener.IResultSaver;
 
 /**
  * name is the key, so constructor with name is necessary.
@@ -39,32 +39,32 @@ public interface ILoadManager extends Runnable {
     /**
      * @param keepAlive true if use http keepalive
      */
-    void setHttpKeepAlive(boolean keepAlive);
+    void setHttpKeepAlive(final boolean keepAlive);
 
     /**
      * @param redirect if true follow redirect
      */
-    void setHttpFollowRedirect(boolean redirect);
+    void setHttpFollowRedirect(final boolean redirect);
 
     /**
      * @param count loop count
      */
-    void setLoopCount(int count);
+    void setLoopCount(final int count);
 
     /**
      * @param forever true, if loop forever
      */
-    void setLoopForever(boolean forever);
+    void setLoopForever(final boolean forever);
 
     /**
      * @param time thread create time in second
      */
-    void setRampUpTime(int time);
+    void setRampUpTime(final int time);
 
     /**
      * @param numberOfThread
      */
-    void setNumberOfThread(int numberOfThread);
+    void setNumberOfThread(final int numberOfThread);
 
     /**
      * @return true if use http keep alive
@@ -86,7 +86,7 @@ public interface ILoadManager extends Runnable {
      * @param path http path
      * @param method {@link HTTPMethod http method}
      */
-    void addHttpSampler(String name, String domain, int port, String path, HTTPMethod method, String systemInfoCollectorDomain) throws LoadTException;
+    void addHttpSampler(final String name, final String domain, final int port, final String path, final HTTPMethod method, final String systemInfoCollectorDomain) throws LoadTException;
 
     /**
      * add {@link IResultListener result listener} to load manager context. If listener is exist in map, throw LostTException
@@ -94,7 +94,7 @@ public interface ILoadManager extends Runnable {
      * @param listener ResultListener to be added
      * @throws LoadTException
      */
-    void addListener(IResultListener listener) throws LoadTException;
+    void addListener(final IResultListener listener) throws LoadTException;
 
     /**
      * start load manager thread
@@ -107,20 +107,18 @@ public interface ILoadManager extends Runnable {
     Thread getThread();
 
     /**
-     *
-     * @param collector system information collector to be added
-     * @throws LoadTException
-     */
-    void addSystemInfoCollector(SystemInfoCollector collector) throws LoadTException;
-
-    /**
      * add {@link IResultCalculator calculator} for statistic data
      *
      * @param calculator calculator
      * @throws LoadTException
      */
-    void addCalculator(@NonNull IResultCalculator calculator) throws LoadTException;
+    void addCalculator(final IResultCalculator calculator) throws LoadTException;
 
+    /**
+     *
+     * @param saver result saver
+     */
+    void addResultSaver(final IResultSaver saver) throws LoadTException;
     /**
      * add listener to calculator with name which need {@link StatisticSample statistic sample}
      *
@@ -128,5 +126,5 @@ public interface ILoadManager extends Runnable {
      * @param listener ResultListener to be added
      * @throws LoadTException
      */
-    void addStatisticSampleListener(@NonNull String calculatorName, @NonNull IResultListener listener) throws LoadTException;
+    void addStatisticSampleListener(final String calculatorName, final IResultListener listener) throws LoadTException;
 }

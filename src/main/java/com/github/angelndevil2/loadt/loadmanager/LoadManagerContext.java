@@ -2,6 +2,7 @@ package com.github.angelndevil2.loadt.loadmanager;
 
 import com.github.angelndevil2.loadt.common.*;
 import com.github.angelndevil2.loadt.listener.IResultListener;
+import com.github.angelndevil2.loadt.listener.IResultSaver;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -19,7 +20,6 @@ public class LoadManagerContext extends ContextBase {
     private static final long serialVersionUID = 8458996607118385704L;
 
     private final HTTPOptions httpOptions = new HTTPOptions();
-    private final SaveOptions saveOptions = new SaveOptions();
     private int loopCount = 1;
     private int numberOfThread = 1;
     private int rampUpTime = 1;
@@ -27,8 +27,8 @@ public class LoadManagerContext extends ContextBase {
 
     private transient final ConcurrentHashMap<String, HttpSampler> httpSamplers = new ConcurrentHashMap<String, HttpSampler>();
     private transient final CopyOnWriteArrayList<IResultListener> listeners = new CopyOnWriteArrayList<IResultListener>();
-    private transient final ConcurrentHashMap<String, SystemInfoCollector> systemInfoCollectors = new ConcurrentHashMap<String, SystemInfoCollector>();
     private transient final ConcurrentHashMap<String, IResultCalculator> calculators = new ConcurrentHashMap<String, IResultCalculator>();
+    private transient final CopyOnWriteArrayList<IResultSaver> savers = new CopyOnWriteArrayList<IResultSaver>();
 
     /**
      * set {@link HTTPOptions#keepAlive}
@@ -70,57 +70,16 @@ public class LoadManagerContext extends ContextBase {
      * @param method HTTPMethod
      * @param systemInfoCollectorDomain SystemInfoCollector domain
      */
-    public void addHttpSampler(@NonNull String name, String domain, int port, String path, HTTPMethod method, String systemInfoCollectorDomain) throws LoadTException {
+    public void addHttpSampler(
+            @NonNull final String name,
+            @NonNull final String domain,
+            final int port,
+            @NonNull final String path,
+            @NonNull final HTTPMethod method,
+            @NonNull final String systemInfoCollectorDomain
+    ) throws LoadTException {
         if (httpSamplers.containsKey(name)) throw new LoadTException("HttpSampler "+ name + " already exist.");
         httpSamplers.put(name, new HttpSampler(name, domain, port, path, method, systemInfoCollectorDomain));
-    }
-
-    /**
-     * add {@link HttpSampler}
-     *
-     * @param name http sampler name
-     * @param domain http domain
-     * @param path http path
-     * @param method HTTPMethod
-     */
-    public void addHttpSampler(@NonNull String name, String domain, String path, HTTPMethod method) throws LoadTException {
-        addHttpSampler(name, domain, 80, path, method, null);
-    }
-
-    /**
-     * add {@link HttpSampler}
-     *
-     * @param name http sampler name
-     * @param domain http domain
-     * @param path http path
-     * @param method HTTPMethod
-     * @param systemInfoCollectorDomain SystemInfoCollector domain
-     */
-    public void addHttpSampler(@NonNull String name, String domain, String path, HTTPMethod method, String systemInfoCollectorDomain) throws LoadTException {
-        addHttpSampler(name, domain, 80, path, method, systemInfoCollectorDomain);
-    }
-
-    /**
-     * add {@link HttpSampler}
-     *
-     * @param name http sampler name
-     * @param domain http domain
-     * @param port http port
-     * @param path http path
-     */
-    public void addHttpSampler(@NonNull String name, String domain, int port, String path) throws LoadTException {
-        addHttpSampler(name, domain, port, path, HTTPMethod.GET, null);
-    }
-
-    /**
-     * add {@link HttpSampler}
-     *
-     * @param name http sampler name
-     * @param domain http domain
-     * @param path http path
-     */
-    public void addHttpSampler(@NonNull String name, String domain, String path) throws LoadTException {
-        addHttpSampler(name, domain, 80, path, HTTPMethod.GET, null);
     }
 
     /**
@@ -129,19 +88,9 @@ public class LoadManagerContext extends ContextBase {
      * @param listener ResultListener to be added
      * @throws LoadTException
      */
-    public void addListener(IResultListener listener) throws LoadTException {
+    public void addListener(@NonNull final IResultListener listener) throws LoadTException {
         if (listeners.contains(listener)) throw new LoadTException("listener "+listener+" already exist.");
         listeners.add(listener);
-    }
-
-    /**
-     *
-     * @param collector system information collector to be added
-     * @throws LoadTException
-     */
-    public void addSystemInfoCollector(SystemInfoCollector collector) throws LoadTException {
-        if (systemInfoCollectors.containsKey(collector.getDomain())) throw new LoadTException("SystemInfoCollector "+collector+" already exist.");
-        systemInfoCollectors.put(collector.getDomain(), collector);
     }
 
     /**
@@ -149,18 +98,8 @@ public class LoadManagerContext extends ContextBase {
      * @param name http sampler name
      * @return http sampler
      */
-    public HttpSampler getHttpSampler(String name) {
+    public HttpSampler getHttpSampler(@NonNull final String name) {
         return httpSamplers.get(name);
-    }
-
-    /**
-     *
-     * @param systemInfoCollectorDomain system informatin collector domain
-     *
-     * @return SystemInfoCollector
-     */
-    public SystemInfoCollector getSystemInfoCollector(String systemInfoCollectorDomain) {
-        return systemInfoCollectors.get(systemInfoCollectorDomain);
     }
 
     /**
@@ -168,10 +107,19 @@ public class LoadManagerContext extends ContextBase {
      *
      * @param calculator calculator
      */
-    public void addCalculator(@NonNull IResultCalculator calculator) throws LoadTException {
+    public void addCalculator(@NonNull final IResultCalculator calculator) throws LoadTException {
         String name = calculator.getName();
         if (calculators.containsKey(name)) throw new LoadTException("calculator "+name+" already exist.");
         calculators.put(name, calculator);
+    }
+
+    /**
+     *
+     * @param saver result saver
+     */
+    public void addResultSaver(@NonNull final IResultSaver saver) throws LoadTException {
+        if (savers.contains(saver)) throw new LoadTException("saver "+saver+" already exist.");
+        savers.add(saver);
     }
 
     /**
@@ -180,10 +128,25 @@ public class LoadManagerContext extends ContextBase {
      * @param calculatorName calculator name
      * @param listener       ResultListener to be added
      */
-    public void addStatisticSampleListener(@NonNull String calculatorName, @NonNull IResultListener listener) throws LoadTException {
+    public void addStatisticSampleListener(@NonNull final String calculatorName, @NonNull final IResultListener listener) throws LoadTException {
         IResultCalculator calculator = calculators.get(calculatorName);
         if (calculator == null) throw new LoadTException("calculator "+calculatorName+" is not exist.");
 
         calculator.addListener(listener);
     }
+
+    /**
+     * {@link IResultSaver} thread start
+     */
+    public void startSavers() {
+        for (IResultSaver saver : savers) saver.start();
+    }
+
+    /**
+     * {@link IResultCalculator} thread start
+     */
+    public void startCalculators() {
+        for (IResultCalculator calculator : calculators.values()) calculator.start();
+    }
+
 }

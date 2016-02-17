@@ -2,6 +2,7 @@ package com.github.angelndevil2.loadt;
 
 import com.github.angelndevil2.loadt.common.*;
 import com.github.angelndevil2.loadt.listener.IResultListener;
+import com.github.angelndevil2.loadt.listener.IResultSaver;
 import com.github.angelndevil2.loadt.loadmanager.*;
 import com.github.angelndevil2.loadt.util.ContextUtil;
 import lombok.Data;
@@ -69,6 +70,38 @@ public class LoadT {
             throw new LoadTException("LoadManager "+name+" is not exist.");
         }
         manager.setHttpFollowRedirect(redirect);
+    }
+
+    /**
+     * set save interval in millis
+     * @param interval in millis
+     */
+    public void setSaveInterval(long interval) {
+        context.setSaveInterval(interval);
+    }
+
+    /**
+     *
+     * @return interval in millis
+     */
+    public long getSaveInterval() {
+        return context.getSaveInterval();
+    }
+
+    /**
+     * set view interval in millis
+     * @param interval in millis
+     */
+    public void setViewInterval(long interval) {
+        context.setViewInterval(interval);
+    }
+
+    /**
+     *
+     * @return interval in millis
+     */
+    public long getViewInterval() {
+        return context.getViewInterval();
     }
 
     /**
@@ -183,15 +216,35 @@ public class LoadT {
     }
 
     /**
-     * @param managerName load manager name
+     * add {@link SystemInfoCollector} to global contex.
+     *
      * @param collector system information collector to be added
      * @throws LoadTException
      */
-    public void addSystemInfoCollector(String managerName, SystemInfoCollector collector) throws LoadTException {
-        ILoadManager manager = loadManagers.get(managerName);
-        if (manager == null) throw new LoadTException("LoadManager " + managerName + " is not exist.");
-        manager.addSystemInfoCollector(collector);
+    public void addSystemInfoCollector(SystemInfoCollector collector) throws LoadTException {
+        context.addSystemInfoCollector(collector);
     }
+
+    /**
+     * {@link SystemInfoCollector} with name(domain name) thread start.
+     *
+     * @param name system collector's domain name
+     *
+     * @throws LoadTException if SystemInfoCollector with name(domain name) is not exist.
+     */
+    public void startSystemInfoCollector(String name) throws LoadTException {
+        getContext().startSystemInfoCollector(name);
+    }
+
+    /**
+     * {@link SystemInfoCollector}s
+     *
+     * @throws LoadTException if SystemInfoCollector is not exist.
+     */
+    public void startSystemInfoCollectors() throws LoadTException {
+        getContext().startSystemInfoCollectors();
+    }
+
 
     /**
      * add {@link IResultCalculator calculator} for statistic data
@@ -217,6 +270,16 @@ public class LoadT {
         ILoadManager manager = loadManagers.get(managerName);
         if (manager == null) throw new LoadTException("LoadManager " + managerName + " is not exist.");
         manager.addStatisticSampleListener(calculatorName, listener);
+    }
+
+    /**
+     *
+     * @param saver result saver
+     */
+    public void addResultSaver(@NonNull String managerName, @NonNull final IResultSaver saver) throws LoadTException {
+        ILoadManager manager = loadManagers.get(managerName);
+        if (manager == null) throw new LoadTException("LoadManager " + managerName + " is not exist.");
+        manager.addResultSaver(saver);
     }
 
     /**

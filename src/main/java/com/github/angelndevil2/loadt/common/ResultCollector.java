@@ -68,7 +68,7 @@ public class ResultCollector implements IResultCollector {
         String index = sample.getLabel();
         HttpSampler sampler = ContextUtil.getLoadManagerContext().getHttpSampler(index);
         if (sampler == null) return null;
-        SystemInfoCollector systemInfoCollector = ContextUtil.getLoadManagerContext().getSystemInfoCollector(sampler.getSystemInfoCollectorDomain());
+        SystemInfoCollector systemInfoCollector = ContextUtil.getSystemInfoCollector(sampler.getSystemInfoCollectorDomain());
         if (systemInfoCollector == null) return null;
 
         return systemInfoCollector.getCpuBusy();
@@ -84,20 +84,6 @@ public class ResultCollector implements IResultCollector {
         String name = calculator.getName();
         if (calculators.containsKey(name)) throw new LoadTException("calculator "+name+" already exist.");
         calculators.put(name, calculator);
-    }
-
-    /**
-     * add listener to calculator with name which need {@link StatisticSample statistic sample}
-     *
-     * @param calculatorName calculator name
-     * @param listener       ResultListener to be added
-     */
-    @Override
-    public void addStatisticSampleListener(@NonNull String calculatorName, @NonNull IResultListener listener) throws LoadTException {
-        IResultCalculator calculator = calculators.get(calculatorName);
-        if (calculator == null) throw new LoadTException("calculator "+calculatorName+" is not exist.");
-
-        calculator.addListener(listener);
     }
 
     /**
