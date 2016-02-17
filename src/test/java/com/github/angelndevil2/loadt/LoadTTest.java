@@ -3,7 +3,9 @@ package com.github.angelndevil2.loadt;
 import com.github.angelndevil2.loadt.common.HTTPMethod;
 import com.github.angelndevil2.loadt.common.JMeterCalculator;
 import com.github.angelndevil2.loadt.common.LoadTException;
+import com.github.angelndevil2.loadt.listener.CSVFileSaver;
 import com.github.angelndevil2.loadt.listener.ConsoleStatisticViewer;
+import com.github.angelndevil2.loadt.listener.IResultSaver;
 import com.github.angelndevil2.loadt.loadmanager.LoadManagerType;
 import com.github.angelndevil2.loadt.util.PropertiesUtil;
 import org.junit.Test;
@@ -46,14 +48,17 @@ public class LoadTTest {
 
         // add system information collector with domain "192.168.100.241"
         //SystemInfoCollector systemInfoCollector = new SystemInfoCollector("192.168.100.241");
-        // start system information collecting
-        //systemInfoCollector.start();
         //loadT.addSystemInfoCollector(name, systemInfoCollector);
 
         // add console viewer
         //loadT.addListener(name, new ConsoleResultViewer());
         loadT.addCalculator(name, new JMeterCalculator("TOTAL"));
         loadT.addStatisticSampleListener(name, "TOTAL", new ConsoleStatisticViewer());
+
+        IResultSaver saver = new CSVFileSaver("test.csv");
+        loadT.addResultSaver(name, saver);
+        // result saver is also IResultListener, so register with addStatisticSampleListener or addListener.
+        loadT.addStatisticSampleListener(name, "TOTAL", saver);
 
         // run test
         loadT.runTestAll();

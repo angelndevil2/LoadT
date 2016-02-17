@@ -102,7 +102,7 @@ public class JMeterCalculator extends Calculator implements IResultCalculator{
                 sendToListeners(calcSample(q.take()));
             } catch (InterruptedException e) {
                 log.info("interrupted.", e);
-                break;
+                return;
             }
         }
     }

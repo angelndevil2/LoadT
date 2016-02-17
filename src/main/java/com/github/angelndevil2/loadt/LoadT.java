@@ -2,6 +2,7 @@ package com.github.angelndevil2.loadt;
 
 import com.github.angelndevil2.loadt.common.*;
 import com.github.angelndevil2.loadt.listener.IResultListener;
+import com.github.angelndevil2.loadt.listener.IResultSaver;
 import com.github.angelndevil2.loadt.loadmanager.*;
 import com.github.angelndevil2.loadt.util.ContextUtil;
 import lombok.Data;
@@ -217,6 +218,16 @@ public class LoadT {
         ILoadManager manager = loadManagers.get(managerName);
         if (manager == null) throw new LoadTException("LoadManager " + managerName + " is not exist.");
         manager.addStatisticSampleListener(calculatorName, listener);
+    }
+
+    /**
+     *
+     * @param saver result saver
+     */
+    public void addResultSaver(@NonNull String managerName, @NonNull final IResultSaver saver) throws LoadTException {
+        ILoadManager manager = loadManagers.get(managerName);
+        if (manager == null) throw new LoadTException("LoadManager " + managerName + " is not exist.");
+        manager.addResultSaver(saver);
     }
 
     /**

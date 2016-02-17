@@ -2,6 +2,7 @@ package com.github.angelndevil2.loadt.loadmanager;
 
 import com.github.angelndevil2.loadt.common.*;
 import com.github.angelndevil2.loadt.listener.IResultListener;
+import com.github.angelndevil2.loadt.listener.IResultSaver;
 import com.github.angelndevil2.loadt.util.ContextUtil;
 import lombok.Data;
 import lombok.NonNull;
@@ -18,7 +19,7 @@ public abstract class LoadManager implements ILoadManager {
     private Thread thread;
     private final LoadManagerContext context = new LoadManagerContext();
 
-    public LoadManager(String name) throws LoadTException {
+    public LoadManager(final String name) throws LoadTException {
         this.name = name;
     }
 
@@ -26,7 +27,7 @@ public abstract class LoadManager implements ILoadManager {
      * {@link LoadManagerContext#setHttpKeepAlive(boolean)}
      * @param keepAlive true if use http keepalive
      */
-    public void setHttpKeepAlive(boolean keepAlive) {
+    public void setHttpKeepAlive(final boolean keepAlive) {
         context.setHttpKeepAlive(keepAlive);
     }
 
@@ -34,7 +35,7 @@ public abstract class LoadManager implements ILoadManager {
      * {@link LoadManagerContext#setHttpFollowRedirect(boolean)}
      * @param redirect if true follow redirect
      */
-    public void setHttpFollowRedirect(boolean redirect) {
+    public void setHttpFollowRedirect(final boolean redirect) {
         context.setHttpFollowRedirect(redirect);
     }
 
@@ -42,7 +43,7 @@ public abstract class LoadManager implements ILoadManager {
      * {@link LoadManagerContext#setLoopCount(int)}
      * @param count loop count
      */
-    public void setLoopCount(int count) {
+    public void setLoopCount(final int count) {
         context.setLoopCount(count);
     }
 
@@ -50,7 +51,7 @@ public abstract class LoadManager implements ILoadManager {
      * {@link LoadManagerContext#setLoopForever(boolean)}
      * @param forever true, if loop forever
      */
-    public void setLoopForever(boolean forever) {
+    public void setLoopForever(final boolean forever) {
         context.setLoopForever(forever);
     }
 
@@ -58,7 +59,7 @@ public abstract class LoadManager implements ILoadManager {
      * {@link LoadManagerContext#setRampUpTime(int)}
      * @param time thread create time in second
      */
-    public void setRampUpTime(int time) {
+    public void setRampUpTime(final int time) {
         context.setRampUpTime(time);
     }
 
@@ -66,7 +67,7 @@ public abstract class LoadManager implements ILoadManager {
      * {@link LoadManagerContext#setNumberOfThread(int)}
      * @param numberOfThread
      */
-    public void setNumberOfThread(int numberOfThread) {
+    public void setNumberOfThread(final int numberOfThread) {
         context.setNumberOfThread(numberOfThread);
     }
 
@@ -92,8 +93,16 @@ public abstract class LoadManager implements ILoadManager {
      * @param method {@link HTTPMethod http method}
      * @see HttpSampler
      */
-    public void addHttpSampler(String name, String domain, int port, String path, HTTPMethod method, String SystemInfoCollectorDomain) throws LoadTException {
-        context.addHttpSampler(name, domain, port, path, method, SystemInfoCollectorDomain);
+    public void addHttpSampler(
+            @NonNull final String name,
+            @NonNull final String domain,
+            final int port,
+            @NonNull final String path,
+            @NonNull final HTTPMethod method,
+            @NonNull final String systemInfoCollectorDomain
+    ) throws LoadTException {
+
+        context.addHttpSampler(name, domain, port, path, method, systemInfoCollectorDomain);
     }
 
     /**
@@ -102,7 +111,7 @@ public abstract class LoadManager implements ILoadManager {
      * @param listener ResultListener to be added
      * @throws LoadTException
      */
-    public void addListener(IResultListener listener) throws LoadTException {
+    public void addListener(@NonNull final IResultListener listener) throws LoadTException {
         getContext().addListener(listener);
     }
 
@@ -111,7 +120,7 @@ public abstract class LoadManager implements ILoadManager {
      * @param collector system information collector to be added
      * @throws LoadTException
      */
-    public void addSystemInfoCollector(SystemInfoCollector collector) throws LoadTException {
+    public void addSystemInfoCollector(@NonNull final SystemInfoCollector collector) throws LoadTException {
         getContext().addSystemInfoCollector(collector);
     }
 
@@ -120,8 +129,16 @@ public abstract class LoadManager implements ILoadManager {
      *
      * @param calculator calculator
      */
-    public void addCalculator(@NonNull IResultCalculator calculator) throws LoadTException {
+    public void addCalculator(@NonNull final IResultCalculator calculator) throws LoadTException {
         getContext().addCalculator(calculator);
+    }
+
+    /**
+     *
+     * @param saver result saver
+     */
+    public void addResultSaver(@NonNull final IResultSaver saver) throws LoadTException {
+        getContext().addResultSaver(saver);
     }
 
     /**
@@ -130,17 +147,24 @@ public abstract class LoadManager implements ILoadManager {
      * @param calculatorName calculator name
      * @param listener       ResultListener to be added
      */
-    public void addStatisticSampleListener(@NonNull String calculatorName, @NonNull IResultListener listener) throws LoadTException {
+    public void addStatisticSampleListener(@NonNull final String calculatorName, @NonNull final IResultListener listener) throws LoadTException {
         getContext().addStatisticSampleListener(calculatorName, listener);
     }
 
     /**
      * prepare test
      *
+     * <ol>
+     *     <li>separated thread start({@link IResultSaver}, {@link IResultCalculator})</li>
+     * </ol>
      * must be overridden and called super.
      */
     public void prepareTest() throws LoadTException {
         if (getContext().getHttpSamplers().isEmpty()) throw new LoadTException("No HttpSampler");
+
+        getContext().startCalculators();
+        getContext().startSavers();
+        getContext().startSystemInfoCollector();
     }
 
     /**
