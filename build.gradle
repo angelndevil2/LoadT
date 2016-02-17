@@ -1,4 +1,4 @@
-group 'com.github.angelndevil2'
+group 'com.github.angelndevil2.loadt'
 version '0.0.1-SNAPSHOT'
 
 apply plugin : 'java'
