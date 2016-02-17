@@ -107,13 +107,6 @@ public interface ILoadManager extends Runnable {
     Thread getThread();
 
     /**
-     *
-     * @param collector system information collector to be added
-     * @throws LoadTException
-     */
-    void addSystemInfoCollector(final SystemInfoCollector collector) throws LoadTException;
-
-    /**
      * add {@link IResultCalculator calculator} for statistic data
      *
      * @param calculator calculator

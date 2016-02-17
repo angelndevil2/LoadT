@@ -116,15 +116,6 @@ public abstract class LoadManager implements ILoadManager {
     }
 
     /**
-     *
-     * @param collector system information collector to be added
-     * @throws LoadTException
-     */
-    public void addSystemInfoCollector(@NonNull final SystemInfoCollector collector) throws LoadTException {
-        getContext().addSystemInfoCollector(collector);
-    }
-
-    /**
      * add {@link IResultCalculator calculator} for statistic data
      *
      * @param calculator calculator
@@ -164,7 +155,6 @@ public abstract class LoadManager implements ILoadManager {
 
         getContext().startCalculators();
         getContext().startSavers();
-        getContext().startSystemInfoCollector();
     }
 
     /**

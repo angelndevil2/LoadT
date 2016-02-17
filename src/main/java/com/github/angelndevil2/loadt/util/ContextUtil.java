@@ -2,8 +2,10 @@ package com.github.angelndevil2.loadt.util;
 
 import com.github.angelndevil2.loadt.LoadT;
 import com.github.angelndevil2.loadt.LoadTContext;
+import com.github.angelndevil2.loadt.common.SystemInfoCollector;
 import com.github.angelndevil2.loadt.loadmanager.LoadManagerContext;
 import lombok.Data;
+import lombok.NonNull;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -24,11 +26,19 @@ public class ContextUtil implements Serializable {
     @Setter
     private static LoadT loadT;
 
-    public static void setLoadManagerContext(LoadManagerContext ctx) {
+    public static void setLoadManagerContext(final LoadManagerContext ctx) {
         context.set(ctx);
     }
 
     public static LoadManagerContext getLoadManagerContext() {
         return context.get();
+    }
+
+    public static long getSaveInterval() {
+        return globalContext.getSaveInterval();
+    }
+
+    public static SystemInfoCollector getSystemInfoCollector(@NonNull String domainName) {
+        return globalContext.getSystemInfoCollector(domainName);
     }
 }

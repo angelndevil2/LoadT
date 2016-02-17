@@ -32,4 +32,16 @@ public interface IResultSaver extends IResultListener,  Runnable, Serializable {
      * finish saving and release resources
      */
     void close() throws LoadTException;
+
+    /**
+     *
+     * @return save interval in millis
+     */
+    long getSaveInterval();
+
+    /**
+     * check {@link com.github.angelndevil2.loadt.common.SaveOptions} and save or not
+     *
+     */
+    void saveOrNot(ISample sample) throws LoadTException;
 }

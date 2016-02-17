@@ -73,6 +73,22 @@ public class LoadT {
     }
 
     /**
+     * set save interval in millis
+     * @param interval in millis
+     */
+    public void setSaveInterval(long interval) {
+        context.setSaveInterval(interval);
+    }
+
+    /**
+     *
+     * @return interval in millis
+     */
+    public long getSaveInterval() {
+        return context.getSaveInterval();
+    }
+
+    /**
      *
      * after check if key(LoadManager's name) is exist, set loop count.<br />
      * if key is already exist, throw {@link LoadTException}
@@ -184,15 +200,35 @@ public class LoadT {
     }
 
     /**
-     * @param managerName load manager name
+     * add {@link SystemInfoCollector} to global contex.
+     *
      * @param collector system information collector to be added
      * @throws LoadTException
      */
-    public void addSystemInfoCollector(String managerName, SystemInfoCollector collector) throws LoadTException {
-        ILoadManager manager = loadManagers.get(managerName);
-        if (manager == null) throw new LoadTException("LoadManager " + managerName + " is not exist.");
-        manager.addSystemInfoCollector(collector);
+    public void addSystemInfoCollector(SystemInfoCollector collector) throws LoadTException {
+        context.addSystemInfoCollector(collector);
     }
+
+    /**
+     * {@link SystemInfoCollector} with name(domain name) thread start.
+     *
+     * @param name system collector's domain name
+     *
+     * @throws LoadTException if SystemInfoCollector with name(domain name) is not exist.
+     */
+    public void startSystemInfoCollector(String name) throws LoadTException {
+        getContext().startSystemInfoCollector(name);
+    }
+
+    /**
+     * {@link SystemInfoCollector}s
+     *
+     * @throws LoadTException if SystemInfoCollector is not exist.
+     */
+    public void startSystemInfoCollectors() throws LoadTException {
+        getContext().startSystemInfoCollectors();
+    }
+
 
     /**
      * add {@link IResultCalculator calculator} for statistic data

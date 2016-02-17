@@ -20,7 +20,6 @@ public class LoadManagerContext extends ContextBase {
     private static final long serialVersionUID = 8458996607118385704L;
 
     private final HTTPOptions httpOptions = new HTTPOptions();
-    private final SaveOptions saveOptions = new SaveOptions();
     private int loopCount = 1;
     private int numberOfThread = 1;
     private int rampUpTime = 1;
@@ -28,7 +27,6 @@ public class LoadManagerContext extends ContextBase {
 
     private transient final ConcurrentHashMap<String, HttpSampler> httpSamplers = new ConcurrentHashMap<String, HttpSampler>();
     private transient final CopyOnWriteArrayList<IResultListener> listeners = new CopyOnWriteArrayList<IResultListener>();
-    private transient final ConcurrentHashMap<String, SystemInfoCollector> systemInfoCollectors = new ConcurrentHashMap<String, SystemInfoCollector>();
     private transient final ConcurrentHashMap<String, IResultCalculator> calculators = new ConcurrentHashMap<String, IResultCalculator>();
     private transient final CopyOnWriteArrayList<IResultSaver> savers = new CopyOnWriteArrayList<IResultSaver>();
 
@@ -97,31 +95,11 @@ public class LoadManagerContext extends ContextBase {
 
     /**
      *
-     * @param collector system information collector to be added
-     * @throws LoadTException
-     */
-    public void addSystemInfoCollector(@NonNull final SystemInfoCollector collector) throws LoadTException {
-        if (systemInfoCollectors.containsKey(collector.getDomain())) throw new LoadTException("SystemInfoCollector "+collector+" already exist.");
-        systemInfoCollectors.put(collector.getDomain(), collector);
-    }
-
-    /**
-     *
      * @param name http sampler name
      * @return http sampler
      */
     public HttpSampler getHttpSampler(@NonNull final String name) {
         return httpSamplers.get(name);
-    }
-
-    /**
-     *
-     * @param systemInfoCollectorDomain system informatin collector domain
-     *
-     * @return SystemInfoCollector
-     */
-    public SystemInfoCollector getSystemInfoCollector(@NonNull final String systemInfoCollectorDomain) {
-        return systemInfoCollectors.get(systemInfoCollectorDomain);
     }
 
     /**
@@ -171,10 +149,4 @@ public class LoadManagerContext extends ContextBase {
         for (IResultCalculator calculator : calculators.values()) calculator.start();
     }
 
-    /**
-     * {@link SystemInfoCollector} thread start
-     */
-    public void startSystemInfoCollector() {
-        for (SystemInfoCollector sic : systemInfoCollectors.values()) sic.start();
-    }
 }

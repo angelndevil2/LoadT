@@ -68,7 +68,7 @@ public class ResultCollector implements IResultCollector {
         String index = sample.getLabel();
         HttpSampler sampler = ContextUtil.getLoadManagerContext().getHttpSampler(index);
         if (sampler == null) return null;
-        SystemInfoCollector systemInfoCollector = ContextUtil.getLoadManagerContext().getSystemInfoCollector(sampler.getSystemInfoCollectorDomain());
+        SystemInfoCollector systemInfoCollector = ContextUtil.getSystemInfoCollector(sampler.getSystemInfoCollectorDomain());
         if (systemInfoCollector == null) return null;
 
         return systemInfoCollector.getCpuBusy();
