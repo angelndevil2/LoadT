@@ -1,5 +1,5 @@
 group 'com.github.angelndevil2'
-version '0.0.2-SNAPSHOT'
+version '0.0.1'
 
 apply plugin : 'java'
 apply plugin: 'maven'
@@ -87,5 +87,5 @@ uploadArchives {
     }
 }
 
-apply from: 'maven-push.gradle'
+// apply from: 'maven-push.gradle'
 
