@@ -66,5 +66,6 @@ public class LoadTTest {
 
         // run test
         loadT.runTestAll();
+        System.exit(0);
     }
 }
