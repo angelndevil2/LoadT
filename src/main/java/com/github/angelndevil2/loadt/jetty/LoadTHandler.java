@@ -45,15 +45,9 @@ public class LoadTHandler extends AbstractHandler {
         String result = null;
         final Map<String, String[]> paramMap = request.getParameterMap();
         // information requested
-        if (paramMap.containsKey(ParamList.LOADT_INFO)) {
-            if (paramMap.containsKey(ParamList.JSON_TYPE)) {
-                result = LoadTInformation.toJSONString();
-                response.setContentType("application/json");
-            } else {
-                result = LoadTInformation.toHtmlString();
-                response.setContentType("text/html; charset=utf-8");
-            }
-
+        if (paramMap.containsKey(ParamList.LOADT_INFO) && paramMap.containsKey(ParamList.JSON_TYPE)) {
+            result = LoadTInformation.toJSONString();
+            response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setContentType("text/html; charset=utf-8");
