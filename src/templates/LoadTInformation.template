@@ -1,0 +1,36 @@
+package com.github.angelndevil2.loadt.common;
+
+import lombok.Data;
+import org.json.simple.JSONObject;
+
+import java.io.Serializable;
+
+/**
+ * @author k, Created on 16. 2. 18.
+ */
+@Data
+public class LoadTInformation implements Serializable {
+    private static final long serialVersionUID = 2603694144601207081L;
+
+    public static final String name = "LoadT";
+    public static final String version = "${version}";
+
+    public static String toHtmlString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append("-").append(version);
+
+        return sb.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static JSONObject toJSONObject() {
+        JSONObject ret = new JSONObject();
+        ret.put("name", name);
+        ret.put("version", version);
+
+        return ret;
+    }
+    public static String toJSONString() {
+        return toJSONObject().toJSONString();
+    }
+}
