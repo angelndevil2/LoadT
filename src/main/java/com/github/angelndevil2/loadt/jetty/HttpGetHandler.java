@@ -66,15 +66,15 @@ public class HttpGetHandler extends AbstractHandler implements Serializable {
         try {
 
             String req = parserRequest.getTarget();
-            if (req.equals(ServiceUri.Uri4Get.INFO)) {
+            if (ServiceUri.Uri4Get.INFO.equals(req)) {
 
                 responseOk(response, LoadTInformation.toJSONString());
 
-            } else if (req.equals(ServiceUri.Uri4Get.LOAD_MANAGERS)) {
+            } else if (ServiceUri.Uri4Get.LOAD_MANAGERS.equals(req)) {
 
                 responseOk(response, getLoadManagers().toJSONString());
 
-            } else if (req.equals(ServiceUri.Uri4Get.LOAD_MANAGER)) {
+            } else if (ServiceUri.Uri4Get.LOAD_MANAGER.equals(req)) {
 
                 if (parserRequest.getId() == null || parserRequest.getWhat() == null) throw new LoadTException("invalid uri "+request.getRequestURI());
 

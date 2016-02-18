@@ -13,6 +13,9 @@ import com.github.angelndevil2.loadt.listener.IResultSaver;
 import com.github.angelndevil2.loadt.loadmanager.LoadManagerType;
 import com.github.angelndevil2.loadt.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.client.ContentExchange;
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.HttpExchange;
 import org.junit.Test;
 
 import java.io.FileInputStream;
@@ -42,19 +45,23 @@ public class LoadTTest {
         }
     }
 
+    static LoadT loadT = new LoadT();
+    // set LoadManager
+    final static String name = "Test load manager";
+    static {
+        try {
+            loadT.addLoadManager(name, LoadManagerType.JMETER);
+        } catch (LoadTException e) {
+            log.error("{} already exits", name, e);
+        }
+    }
+
+    static {
+        new JettyServer().run();
+    }
+
     @Test
     public void testLoadT() throws LoadTException, IOException, InterruptedException {
-
-        LoadT loadT = new LoadT();
-
-        Thread jetty = new Thread(new JettyServer());
-        jetty.setDaemon(true);
-        jetty.start();
-
-        // set LoadManager
-        final String name = "Test load manager";
-        loadT.addLoadManager(name, LoadManagerType.JMETER);
-
 
         // set options
 
@@ -71,7 +78,7 @@ public class LoadTTest {
         loadT.setNumberOfThread(name, 1);
 
        // add http sampler
-        loadT.addHttpSampler(name, "websphere", "localhost", Integer.valueOf((String)jettyProp.get(PropList.HTTP_PORT)), "/", HTTPMethod.GET, "localhost");
+        loadT.addHttpSampler(name, "test", "localhost", Integer.valueOf((String)jettyProp.get(PropList.HTTP_PORT)), "/", HTTPMethod.GET, "localhost");
 
         // add system information collector with domain "192.168.100.241"
         SystemInfoCollector systemInfoCollector = new SystemInfoCollector("localhost");
@@ -92,6 +99,40 @@ public class LoadTTest {
 
         // run test
         loadT.runTestAll();
-        System.exit(0);
+    }
+
+    @Test
+    public void getLoadTInfoFromEmbeddedTest() throws Exception {
+
+        HttpClient client = new HttpClient();
+        client.start();
+
+        ContentExchange exchange = new ContentExchange(true);
+        exchange.setURL("http://localhost:1080/LoadT/info");
+
+        client.send(exchange);
+
+        // Waits until the exchange is terminated
+        int exchangeState = exchange.waitForDone();
+
+        if (exchangeState == HttpExchange.STATUS_COMPLETED)
+            System.out.println(exchange.getResponseContent());
+
+        exchange.reset();
+        exchange.setURL("http://localhost:1080/LoadT/load-managers");
+
+
+        client.send(exchange);
+
+        // Waits until the exchange is terminated
+        exchangeState = exchange.waitForDone();
+
+        if (exchangeState == HttpExchange.STATUS_COMPLETED)
+            System.out.println(exchange.getResponseContent());
+
+        /*else if (exchangeState == HttpExchange.STATUS_EXCEPTED)
+            handleError();
+        else if (exchangeState == HttpExchange.STATUS_EXPIRED)
+            handleSlowServer();*/
     }
 }

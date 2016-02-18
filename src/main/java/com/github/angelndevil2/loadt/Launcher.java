@@ -19,10 +19,6 @@ import static java.lang.System.exit;
 @Slf4j
 public class Launcher {
 
-    private static Thread Jetty() {
-        return new Thread(new JettyServer());
-    }
-
     public static void main(String[] args) throws ParseException, IOException, LoadTException, InterruptedException {
 
         CmdOptions options = new CmdOptions();
@@ -54,9 +50,7 @@ public class Launcher {
         }
 
         if (cmd.hasOption("s")) {
-            Thread jetty = Jetty();
-            jetty.start();
-            jetty.join();
+            new JettyServer().run();
         }
     }
 }
