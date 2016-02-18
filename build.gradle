@@ -24,6 +24,7 @@ dependencies {
             'org.apache.commons:commons-pool2:2.4.2',
             'org.projectlombok:lombok:1.16.6',
             'com.tistory.devilnangel:system-info:0.0.1',
+            'org.eclipse.jetty:jetty-server:8.1.18.v20150929',
             'org.slf4j:jcl-over-slf4j:1.7.16',
             'org.slf4j:log4j-over-slf4j:1.7.16'
     )
