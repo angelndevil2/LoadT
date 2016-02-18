@@ -16,11 +16,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpExchange;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author k, Created on 16. 2. 6.
@@ -28,8 +32,19 @@ import java.util.Properties;
 @Slf4j
 public class LoadTTest {
 
-    static final Properties jettyProp;
-    static {
+    private static Properties jettyProp;
+    private final static LoadT loadT = new LoadT();
+    // set LoadManager
+    private final static String name = "Test load manager";
+    private final static JettyServer server = new JettyServer();
+
+    @BeforeClass
+    public static void startJettyServer() {
+        server.run();
+    }
+
+    @BeforeClass
+    public static void initValues() {
         try {
             PropertiesUtil.setDirs("src/dist");
         } catch (IOException e) {
@@ -43,12 +58,7 @@ public class LoadTTest {
         } catch (IOException e) {
             log.error("error loading jetty properties.", e);
         }
-    }
 
-    static LoadT loadT = new LoadT();
-    // set LoadManager
-    final static String name = "Test load manager";
-    static {
         try {
             loadT.addLoadManager(name, LoadManagerType.JMETER);
         } catch (LoadTException e) {
@@ -56,8 +66,9 @@ public class LoadTTest {
         }
     }
 
-    static {
-        new JettyServer().run();
+    @AfterClass
+    public static void stopJettyServer() throws Exception {
+        server.stop();
     }
 
     @Test
@@ -115,20 +126,23 @@ public class LoadTTest {
         // Waits until the exchange is terminated
         int exchangeState = exchange.waitForDone();
 
-        if (exchangeState == HttpExchange.STATUS_COMPLETED)
+        if (exchangeState == HttpExchange.STATUS_COMPLETED) {
+            assertEquals(200, exchange.getResponseStatus());
             System.out.println(exchange.getResponseContent());
+        }
 
         exchange.reset();
         exchange.setURL("http://localhost:1080/LoadT/load-managers");
-
 
         client.send(exchange);
 
         // Waits until the exchange is terminated
         exchangeState = exchange.waitForDone();
 
-        if (exchangeState == HttpExchange.STATUS_COMPLETED)
+        if (exchangeState == HttpExchange.STATUS_COMPLETED) {
+            assertEquals(200, exchange.getResponseStatus());
             System.out.println(exchange.getResponseContent());
+        }
 
         /*else if (exchangeState == HttpExchange.STATUS_EXCEPTED)
             handleError();
