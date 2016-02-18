@@ -7,7 +7,7 @@
 
     <script>
         $(function() {
-            $.get( "/LoadT/?info&json", function( data ) {
+            $.get( "/LoadT/info", function( data ) {
               $( "div" )
                 .append( "Name: " + data.name ).append("<br />")
                 .append( "Version: " + data.version );

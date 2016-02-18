@@ -1,6 +1,7 @@
 package com.github.angelndevil2.loadt.common;
 
 import lombok.Data;
+import org.json.simple.JSONObject;
 
 import java.io.Serializable;
 
@@ -17,4 +18,22 @@ public class HTTPOptions implements Serializable {
 
     private boolean keepAlive = false;
     private boolean followRedirect = false;
+
+    /**
+     *
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public JSONObject toJSONObject() {
+        JSONObject ret = new JSONObject();
+
+        ret.put("keepAlive", keepAlive);
+        ret.put("followRedirect", followRedirect);
+
+        return ret;
+    }
+
+    public String toJSONString() {
+        return toJSONObject().toJSONString();
+    }
 }

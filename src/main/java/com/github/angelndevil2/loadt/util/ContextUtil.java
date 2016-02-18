@@ -3,12 +3,14 @@ package com.github.angelndevil2.loadt.util;
 import com.github.angelndevil2.loadt.LoadT;
 import com.github.angelndevil2.loadt.LoadTContext;
 import com.github.angelndevil2.loadt.common.SystemInfoCollector;
+import com.github.angelndevil2.loadt.loadmanager.ILoadManager;
 import com.github.angelndevil2.loadt.loadmanager.LoadManagerContext;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * Context utility class
@@ -65,5 +67,21 @@ public class ContextUtil implements Serializable {
      */
     public static SystemInfoCollector getSystemInfoCollector(@NonNull final String domainName) {
         return globalContext.getSystemInfoCollector(domainName);
+    }
+
+    /**
+     *
+     * @return set of load manager's names
+     */
+    public static Set<String> getLoadManagers() {
+        return loadT == null ? null : loadT.getLoadManagers().keySet();
+    }
+
+    /**
+     * @param name load manager name
+     * @return load manager with name
+     */
+    public static ILoadManager getLoadManager(@NonNull String name) {
+        return loadT == null ? null : loadT.getLoadManager(name);
     }
 }

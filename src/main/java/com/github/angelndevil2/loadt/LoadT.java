@@ -294,6 +294,15 @@ public class LoadT {
     }
 
     /**
+     *
+     * @param name load manager's name
+     * @return load manager with name
+     */
+    public ILoadManager getLoadManager(@NonNull String name) {
+        return loadManagers.get(name);
+    }
+
+    /**
      * perform test using {@link ILoadManager#performTest()}
      *
      * @throws LoadTException

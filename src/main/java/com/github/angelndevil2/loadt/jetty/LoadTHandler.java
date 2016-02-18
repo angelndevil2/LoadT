@@ -1,6 +1,5 @@
 package com.github.angelndevil2.loadt.jetty;
 
-import com.github.angelndevil2.loadt.common.LoadTInformation;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.AbstractHttpConnection;
 import org.eclipse.jetty.server.Request;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 /**
  * master class for request handling.
@@ -21,6 +19,11 @@ import java.util.Map;
  */
 @Slf4j
 public class LoadTHandler extends AbstractHandler {
+
+    /**
+     * Http GET method handler
+     */
+    private final HttpGetHandler httpGetHandler = new HttpGetHandler();
     /**
      * Handle a request.
      *
@@ -36,26 +39,21 @@ public class LoadTHandler extends AbstractHandler {
      * @throws ServletException
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void handle(String target,
                        Request baseRequest,
                        HttpServletRequest request,
                        HttpServletResponse response) throws IOException, ServletException {
 
-        String result = null;
-        final Map<String, String[]> paramMap = request.getParameterMap();
-        // information requested
-        if (paramMap.containsKey(ParamList.LOADT_INFO) && paramMap.containsKey(ParamList.JSON_TYPE)) {
-            result = LoadTInformation.toJSONString();
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
+        if ("GET".equals(request.getMethod())) {
+            httpGetHandler.handle(target, baseRequest, request, response);
+            return;
         } else {
             response.setContentType("text/html; charset=utf-8");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
         PrintWriter out = response.getWriter();
-        out.println(result);
+        out.println("Not supported method.");
         baseRequest.setHandled(true);
     }
 }
