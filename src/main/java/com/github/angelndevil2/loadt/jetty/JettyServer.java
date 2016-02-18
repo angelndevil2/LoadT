@@ -81,4 +81,12 @@ public class JettyServer implements Runnable, Serializable {
             log.info("jetty server interrupted", e);
         }*/
     }
+
+    public void stop() throws Exception {
+        if (server != null) server.stop();
+    }
+
+    public void join() throws InterruptedException {
+        if (server != null) server.join();
+    }
 }
