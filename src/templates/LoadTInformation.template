@@ -15,13 +15,6 @@ public class LoadTInformation implements Serializable {
     public static final String name = "LoadT";
     public static final String version = "${version}";
 
-    public static String toHtmlString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(name).append("-").append(version);
-
-        return sb.toString();
-    }
-
     @SuppressWarnings("unchecked")
     public static JSONObject toJSONObject() {
         JSONObject ret = new JSONObject();
@@ -30,6 +23,7 @@ public class LoadTInformation implements Serializable {
 
         return ret;
     }
+
     public static String toJSONString() {
         return toJSONObject().toJSONString();
     }
