@@ -1,6 +1,7 @@
 package com.github.angelndevil2.loadt;
 
 import com.github.angelndevil2.loadt.common.LoadTException;
+import com.github.angelndevil2.loadt.jetty.JettyServer;
 import com.github.angelndevil2.loadt.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
@@ -17,6 +18,10 @@ import static java.lang.System.exit;
  */
 @Slf4j
 public class Launcher {
+
+    private static Thread Jetty() {
+        return new Thread(new JettyServer());
+    }
 
     public static void main(String[] args) throws ParseException, IOException, LoadTException, InterruptedException {
 
@@ -46,6 +51,12 @@ public class Launcher {
 
                 System.err.println(PropertiesUtil.getConfDir() + File.separator + PropertiesUtil.AppProperties + " not found. may use -d option" + e);
             }
+        }
+
+        if (cmd.hasOption("s")) {
+            Thread jetty = Jetty();
+            jetty.start();
+            jetty.join();
         }
     }
 }
