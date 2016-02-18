@@ -4,7 +4,9 @@ import com.github.angelndevil2.loadt.common.HTTPMethod;
 import com.github.angelndevil2.loadt.common.JMeterCalculator;
 import com.github.angelndevil2.loadt.common.LoadTException;
 import com.github.angelndevil2.loadt.common.SystemInfoCollector;
+import com.github.angelndevil2.loadt.jetty.JettyServer;
 import com.github.angelndevil2.loadt.listener.CSVFileSaver;
+import com.github.angelndevil2.loadt.listener.ConsoleResultViewer;
 import com.github.angelndevil2.loadt.listener.ConsoleStatisticViewer;
 import com.github.angelndevil2.loadt.listener.IResultSaver;
 import com.github.angelndevil2.loadt.loadmanager.LoadManagerType;
@@ -25,6 +27,10 @@ public class LoadTTest {
 
         PropertiesUtil.setDirs("src/dist");
 
+        Thread jetty = new Thread(new JettyServer());
+        jetty.setDaemon(true);
+        jetty.start();
+
         // set LoadManager
         final String name = "Test load manager";
         loadT.addLoadManager(name, LoadManagerType.JMETER);
@@ -39,21 +45,21 @@ public class LoadTTest {
         loadT.setHttpFollowRedirect(name, true);
 
         // set loop count 10
-        loadT.setLoopCount(name,1000);
+        loadT.setLoopCount(name,1);
 
         // set number of thread 100
         loadT.setNumberOfThread(name, 1);
 
        // add http sampler
-        loadT.addHttpSampler(name, "websphere", "192.168.100.241", 10370, "/ext", HTTPMethod.GET, "192.168.100.241");
+        loadT.addHttpSampler(name, "websphere", "localhost", 1080, "/", HTTPMethod.GET, "localhost");
 
         // add system information collector with domain "192.168.100.241"
-        SystemInfoCollector systemInfoCollector = new SystemInfoCollector("192.168.100.241");
+        SystemInfoCollector systemInfoCollector = new SystemInfoCollector("localhost");
         loadT.addSystemInfoCollector(systemInfoCollector);
         loadT.startSystemInfoCollectors();
 
         // add console viewer
-        //loadT.addListener(name, new ConsoleResultViewer());
+        loadT.addListener(name, new ConsoleResultViewer());
         loadT.setViewInterval(1000);
         loadT.addCalculator(name, new JMeterCalculator("TOTAL"));
         loadT.addStatisticSampleListener(name, "TOTAL", new ConsoleStatisticViewer());

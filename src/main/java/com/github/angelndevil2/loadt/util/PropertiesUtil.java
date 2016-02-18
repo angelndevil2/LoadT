@@ -26,12 +26,15 @@ public class PropertiesUtil {
     public static final String LogbackConfig = "logback.xml";
     public static final String AppProperties = "loadt.properties";
     public static final String JmeterProperties = "jmeter.properties";
+    public static final String JettyProperties = "jetty.properties";
     @Setter @Getter
     private static String baseDir;
     @Setter @Getter
     private static String confDir;
     @Setter @Getter
     private static String binDir;
+    @Setter @Getter
+    private static String webBaseDir;
     /**
      * LoadT's global properties
      */
@@ -56,6 +59,7 @@ public class PropertiesUtil {
     }
 
     public static String getJMeterPropertiesFile() { return confDir+File.separator+JmeterProperties; }
+    public static String getJettyPropertiesFile() { return confDir+File.separator+JettyProperties; }
 
     /**
      * <ol>
@@ -69,6 +73,7 @@ public class PropertiesUtil {
         if (baseDir == null) baseDir = ".";
         confDir = baseDir+File.separator+"conf";
         binDir = baseDir+File.separator+"bin";
+        webBaseDir = baseDir+File.separator+"static_web";
 
         loadProperties();
         if (Boolean.valueOf(properties.getProperty("logback.use"))) loadLogbackConfiguration();
