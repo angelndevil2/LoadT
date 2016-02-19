@@ -1,10 +1,7 @@
 package com.github.angelndevil2.loadt.common;
 
 import com.github.angelndevil2.loadt.listener.IResultListener;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -13,13 +10,14 @@ import java.util.concurrent.ArrayBlockingQueue;
 /**
  * @author k, Created on 16. 2. 17.
  */
-@Data
 @Slf4j
+@Getter @Setter
+@EqualsAndHashCode(of = {"name", "thread"})
+@ToString(of = {"name", "thread"})
 public abstract class ResultCalculator implements IResultCalculator {
 
     private static final long serialVersionUID = -8973924537201333735L;
 
-    private ISample sample;
     private String name;
     private Thread thread;
 
