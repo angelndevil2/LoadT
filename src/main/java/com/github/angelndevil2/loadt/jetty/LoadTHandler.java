@@ -1,5 +1,6 @@
 package com.github.angelndevil2.loadt.jetty;
 
+import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.AbstractHttpConnection;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
@@ -16,7 +17,13 @@ import java.io.PrintWriter;
  *
  * @author k, Created on 16. 2. 18.
  */
+@Slf4j
 public class LoadTHandler extends AbstractHandler {
+
+    /**
+     * Http GET method handler
+     */
+    private final HttpGetHandler httpGetHandler = new HttpGetHandler();
     /**
      * Handle a request.
      *
@@ -37,12 +44,16 @@ public class LoadTHandler extends AbstractHandler {
                        HttpServletRequest request,
                        HttpServletResponse response) throws IOException, ServletException {
 
-        response.setContentType("text/html; charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_OK);
+        if ("GET".equals(request.getMethod())) {
+            httpGetHandler.handle(target, baseRequest, request, response);
+            return;
+        } else {
+            response.setContentType("text/html; charset=utf-8");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
 
         PrintWriter out = response.getWriter();
-
-        out.println("<h1>test</h1>");
+        out.println("Not supported method.");
         baseRequest.setHandled(true);
     }
 }

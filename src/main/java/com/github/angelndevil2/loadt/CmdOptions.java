@@ -20,7 +20,7 @@ public class CmdOptions {
     public CmdOptions() {
 
         options.addOption("h", "help", false, "print this message");
-        options.addOption("s", "server mode", false, "run in server mode");
+        options.addOption("s", "server", false, "run in server mode");
         options.addOption(
                 Option.builder("d").
                         required().

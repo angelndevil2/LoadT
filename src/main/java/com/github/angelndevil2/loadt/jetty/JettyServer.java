@@ -25,6 +25,8 @@ public class JettyServer implements Runnable, Serializable {
 
     private static final long serialVersionUID = 7346771122914495703L;
 
+    private Server server;
+
     public void run() {
 
         Properties jettyProperties = new Properties();
@@ -37,7 +39,7 @@ public class JettyServer implements Runnable, Serializable {
         }
 
         // crate server
-        Server server = new Server(Integer.parseInt(jettyProperties.getProperty(PropList.HTTP_PORT)));
+        server = new Server(Integer.parseInt(jettyProperties.getProperty(PropList.HTTP_PORT)));
 
         // Create the ResourceHandler. It is the object that will actually handle the request for a given file. It is
         // a Jetty Handler object so it is suitable for chaining with other handlers as you will see in other examples.
@@ -68,14 +70,23 @@ public class JettyServer implements Runnable, Serializable {
             server.start();
         } catch (Exception e) {
             log.error("embedded jetty server start error.", e);
-            return;
         }
 
         server.dumpStdErr();
+
+        /*
         try {
             server.join();
         } catch (InterruptedException e) {
             log.info("jetty server interrupted", e);
-        }
+        }*/
+    }
+
+    public void stop() throws Exception {
+        if (server != null) server.stop();
+    }
+
+    public void join() throws InterruptedException {
+        if (server != null) server.join();
     }
 }

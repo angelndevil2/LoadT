@@ -2,9 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>LoadT</title>
+    <script type="text/javascript" src="/js/jquery-2.2.0.min.js"></script>
+
+    <script>
+        $(function() {
+            $.get( "/LoadT/info", function( data ) {
+              $( "div" )
+                .append( "Name: " + data.name ).append("<br />")
+                .append( "Version: " + data.version );
+            }, "json" );
+        })
+    </script>
 </head>
 <body>
-
+    <div></div>
 </body>
 </html>
