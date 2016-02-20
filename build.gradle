@@ -12,6 +12,11 @@ startScripts {
     classpath = files("*")
 }
 
+configurations {
+    runtime.exclude('module':'lombok')
+    runtime.exclude('module':'log4j')
+}
+
 repositories {
     mavenCentral()
 }
