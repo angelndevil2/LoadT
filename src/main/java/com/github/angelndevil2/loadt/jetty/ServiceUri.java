@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * @author k, Created on 16. 2. 18.
+ * @since 0.0.2
  */
 public class ServiceUri implements Serializable {
     private static final long serialVersionUID = -4607093523913813997L;

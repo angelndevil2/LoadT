@@ -16,6 +16,7 @@ import java.io.PrintWriter;
  * master class for request handling.
  *
  * @author k, Created on 16. 2. 18.
+ * @since 0.0.2
  */
 @Slf4j
 public class LoadTHandler extends AbstractHandler {

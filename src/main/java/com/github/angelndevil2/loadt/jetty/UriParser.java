@@ -12,6 +12,7 @@ import lombok.NonNull;
  * ex) uri = /LoadT/info
  *
  * @author k, Created on 16. 2. 18.
+ * @since 0.0.2
  */
 @Data
 public abstract class UriParser {

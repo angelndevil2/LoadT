@@ -70,7 +70,7 @@ public class ContextUtil implements Serializable {
     }
 
     /**
-     *
+     * @since 0.0.2
      * @return set of load manager's names
      */
     public static Set<String> getLoadManagers() {
@@ -78,6 +78,7 @@ public class ContextUtil implements Serializable {
     }
 
     /**
+     * @since 0.0.2
      * @param name load manager name
      * @return load manager with name
      */
