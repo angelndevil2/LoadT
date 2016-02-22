@@ -23,6 +23,8 @@ import java.util.Set;
 
 /**
  * GET method handler
+ *
+ * @since 0.0.2
  * @author k, Created on 16. 2. 18.
  */
 @Data

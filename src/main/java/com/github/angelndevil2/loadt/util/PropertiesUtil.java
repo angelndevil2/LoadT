@@ -26,6 +26,9 @@ public class PropertiesUtil {
     public static final String LogbackConfig = "logback.xml";
     public static final String AppProperties = "loadt.properties";
     public static final String JmeterProperties = "jmeter.properties";
+    /**
+     *  * @since 0.0.2
+     */
     public static final String JettyProperties = "jetty.properties";
     @Setter @Getter
     private static String baseDir;
@@ -34,6 +37,9 @@ public class PropertiesUtil {
     @Setter @Getter
     private static String binDir;
     @Setter @Getter
+    /**
+     * @since 0.0.2
+     */
     private static String webBaseDir;
     /**
      * LoadT's global properties
@@ -59,6 +65,11 @@ public class PropertiesUtil {
     }
 
     public static String getJMeterPropertiesFile() { return confDir+File.separator+JmeterProperties; }
+
+    /**
+     * @since 0.0.2
+     * @return
+     */
     public static String getJettyPropertiesFile() { return confDir+File.separator+JettyProperties; }
 
     /**

@@ -9,6 +9,7 @@ import java.io.Serializable;
  * rest get request uri parsed request
  *
  * @author k, Created on 16. 2. 19.
+ * @since 0.0.2
  */
 @Data
 public class HttpGetRequest implements Serializable, IRequest {

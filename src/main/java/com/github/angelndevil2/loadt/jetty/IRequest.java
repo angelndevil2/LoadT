@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
  * rest Request interface
  *
  * @author k, Created on 16. 2. 19.
+ * @since 0.0.2
  */
 public interface IRequest {
     /**

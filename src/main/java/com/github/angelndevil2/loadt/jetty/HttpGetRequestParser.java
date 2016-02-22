@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author k, Created on 16. 2. 19.
+ * @since 0.0.2
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
