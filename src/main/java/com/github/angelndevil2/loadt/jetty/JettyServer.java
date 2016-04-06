@@ -51,9 +51,9 @@ public class JettyServer implements Runnable, Serializable {
         resource_handler.setWelcomeFiles(new String[]{ "index.html" });
         resource_handler.setResourceBase(PropertiesUtil.getWebBaseDir());
 
-        log.debug(PropertiesUtil.getWebBaseDir());
+        log.debug("static web base dir : {}",PropertiesUtil.getWebBaseDir());
 
-        // Add a single handler on context "/hello"
+        // Add a single handler on context "/LoadT"
         ContextHandler context = new ContextHandler();
         context.setContextPath( "/LoadT" );
         context.setHandler( new LoadTHandler() );
