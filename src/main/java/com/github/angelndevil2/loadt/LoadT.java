@@ -5,7 +5,6 @@ import com.github.angelndevil2.loadt.listener.IResultListener;
 import com.github.angelndevil2.loadt.listener.IResultSaver;
 import com.github.angelndevil2.loadt.loadmanager.*;
 import com.github.angelndevil2.loadt.util.ContextUtil;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author k, Created on 16. 2. 5.
  */
-@Data
 @Slf4j
 public class LoadT {
 
