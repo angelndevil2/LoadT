@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class LoadT {
 
+    @Getter
     private ConcurrentHashMap<String,ILoadManager> loadManagers = new ConcurrentHashMap<String, ILoadManager>();
 
     /**
